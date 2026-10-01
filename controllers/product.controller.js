@@ -2,7 +2,7 @@ import prisma from "../config/db.js";
 
 export const createProduct = async (req, res, next) => {
     try {
-        const {name, price, quantity} = req.body;
+        const {name, price, quantity, category_id} = req.body;
 
         if(!name){
             return res.status(400).json({success: false, message: 'Name is required'});
@@ -18,7 +18,8 @@ export const createProduct = async (req, res, next) => {
                 name, 
                 price, 
                 quantity, 
-                user_id: req.user.id
+                user_id: req.user.id,
+                category_id: category_id !== undefined ? parseInt(category_id) : undefined
            } 
         });
 

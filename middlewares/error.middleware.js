@@ -6,5 +6,13 @@ export const errorHandler = async (error, req, res, next) => {
         return res.status(400).json({success: false, message});
     }
 
+    if (error.code === 'P2003'){
+        return res.status(400).json({
+            success: false, 
+            message: 'Invalid reference - the related record does not exist'
+        });
+
+    }
+
     res.status(500).json({success: false, message: 'Server Error'});
 };
