@@ -41,7 +41,8 @@ export const getProducts = async (req, res, next) => {
 
 export const getProduct = async (req, res, next) => {
     try {
-        const product = await prisma.product.findUnique({where: {id: parseInt(req.params.id)}});
+        const product = await prisma.product.findUnique({
+            where: {id: parseInt(req.params.id)}});
 
         if(!product){
             return res.status(404).json({success: false, message: 'Product not found'});

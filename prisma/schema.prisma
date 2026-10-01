@@ -12,6 +12,8 @@ model Category {
   name       String     @db.VarChar(100)
   created_at DateTime?  @default(now()) @db.Timestamp(6)
   products   Product[]
+  user_id    Int       
+  user       User       @relation(fields: [user_id], references: [id])
 
   @@map("categories")
 }
@@ -37,6 +39,7 @@ model User {
   password    String 
   created_at  DateTime  @default(now())
   products    Product[]
+  categories  Category[]
 
   @@map("users")
 }
