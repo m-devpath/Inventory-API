@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.route.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import productRoutes from "./routes/product.route.js"
 import categoryRoutes from "./routes/category.route.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 5500;
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
