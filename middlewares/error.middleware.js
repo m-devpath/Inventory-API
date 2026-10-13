@@ -7,11 +7,15 @@ export const errorHandler = async (error, req, res, next) => {
     }
 
     if (error.code === 'P2003'){
+        if(req.method === 'DELETE'){
+        return res.status(409).json({
+            success: false,
+            message:'Cannot delete: other records still depend on this one'
+        })}
         return res.status(400).json({
             success: false, 
             message: 'Invalid reference - the related record does not exist'
         });
-
     }
 
     if (error.code === 'P2025') {
@@ -20,6 +24,7 @@ export const errorHandler = async (error, req, res, next) => {
         message: 'Record not found'
         });
     }
+    
 
     res.status(500).json({success: false, message: 'Server Error'});
 };
