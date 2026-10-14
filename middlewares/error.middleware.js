@@ -25,6 +25,20 @@ export const errorHandler = async (error, req, res, next) => {
         });
     }
     
+    if(error.name === 'JsonWebTokenError'){
+        return res.status(401).json({
+            success: false, 
+            message: 'Invalid token'
+        });
+    }
+
+    if(error.name === 'TokenExpiredError'){
+        return res.status(401).json({
+            success: false, 
+            message: 'Token expired, please log in again'
+        });
+    }
+
 
     res.status(500).json({success: false, message: 'Server Error'});
 };
