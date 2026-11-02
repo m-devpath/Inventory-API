@@ -4,8 +4,8 @@ export const createCategory = async (req, res, next) => {
     try {
         const {name} = req.body;
 
-        if(!name){
-            return res.status(400).json({success: false, message: 'Name is required'});  
+        if (!name?.trim()) {
+            return res.status(400).json({ succes: false, message: 'Name is required' })
         }
 
         const category = await prisma.category.create({
@@ -62,6 +62,13 @@ export const getCategory = async (req, res, next) => {
 
 export const updateCategory = async (req, res, next) => {
     try {
+        
+        const { name } = req.body;
+
+        if (!name?.trim()) {
+            return res.status(400).json({ succes: false, message: 'Name is required' })
+        }
+
         const category = await prisma.category.findUnique({
             where: {id: parseInt(req.params.id)}
         });
@@ -80,13 +87,9 @@ export const updateCategory = async (req, res, next) => {
             });
         }
 
-        const { name } = req.body;
-        const dataToUpdate = {};
-        if(name !== undefined) dataToUpdate.name = name;
-
         const updatedCategory = await prisma.category.update({
             where: {id: parseInt(req.params.id)},
-            data: dataToUpdate
+            data: {name: name.trim()}
         });
 
         res.status(200).json({success: true, data: updatedCategory})
