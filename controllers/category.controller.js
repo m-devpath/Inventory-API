@@ -5,7 +5,7 @@ export const createCategory = async (req, res, next) => {
         const {name} = req.body;
 
         if (!name?.trim()) {
-            return res.status(400).json({ succes: false, message: 'Name is required' })
+            return res.status(400).json({ success: false, message: 'Name is required' })
         }
 
         const category = await prisma.category.create({
@@ -66,7 +66,7 @@ export const updateCategory = async (req, res, next) => {
         const { name } = req.body;
 
         if (!name?.trim()) {
-            return res.status(400).json({ succes: false, message: 'Name is required' })
+            return res.status(400).json({ success: false, message: 'Name is required' })
         }
 
         const category = await prisma.category.findUnique({

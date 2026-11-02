@@ -4,18 +4,24 @@ export const createProduct = async (req, res, next) => {
     try {
         const {name, price, quantity, category_id} = req.body;
 
-        if(!name){
-            return res.status(400).json({success: false, message: 'Name is required'});
+         if (!name?.trim()) {
+            return res.status(400).json({ success: false, message: 'Name is required' })
+        }
+
+        if (quantity < 0 ){
+            return res.status(400).json({ success: false, message: 'Quantity Cannot be negative' })
         }
 
         if(!price){
             return res.status(400).json({success: false, message: 'Price is required'});
 
         }
-
+        if (price <= 0 ){
+            return res.status(400).json({ success: false, message: 'Price must be greater than 0' })
+        }
         const product = await prisma.product.create({
            data:{
-                name, 
+                name: name.trim(), 
                 price, 
                 quantity, 
                 user_id: req.user.id,
@@ -31,7 +37,7 @@ export const createProduct = async (req, res, next) => {
 
 export const getProducts = async (req, res, next) => {
     try {
-        const products = await prisma.product.findMany({where: {user_id: req.user.id}});
+        const products = await prisma.product.findMany({where: {user_id: req.user.id}, orderBy: { id: 'asc'}});
 
         res.status(200).json({ success: true, count: products.length, data: products });
 
@@ -62,20 +68,30 @@ export const getProduct = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
     try {
         
+        const {name, price, quantity} = req.body;
+
+        if (!name?.trim()) {
+            return res.status(400).json({ success: false, message: 'Name is required' })
+        }
+
+        if (quantity < 0 ){
+            return res.status(400).json({ success: false, message: 'Quantity Cannot be negative' })
+        }
+
+        if (price <= 0 ){
+            return res.status(400).json({ success: false, message: 'Price must be greater than 0' })
+        }
         const product = await prisma.product.findUnique({where: {id: parseInt(req.params.id)}});
 
-        if(!product){
-            return res.status(404).json({success: false, message: 'Product not found'});
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' })
         }
 
         if(product.user_id !== req.user.id){
             return res.status(403).json({success: false, message: 'Not authorized to access this product'});
         }
 
-        const { name, price, quantity } = req.body;
-
-        const dataToUpdate = {};
-        if(name !== undefined ) dataToUpdate.name = name;
+        const dataToUpdate = { name: name.trim() };
         if(price !== undefined ) dataToUpdate.price = price;
         if(quantity !== undefined ) dataToUpdate.quantity = quantity;
 
