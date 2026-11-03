@@ -12,7 +12,7 @@ export const createProduct = async (req, res, next) => {
             return res.status(400).json({ success: false, message: 'Quantity Cannot be negative' })
         }
 
-        if(!price){
+        if(price === undefined ){
             return res.status(400).json({success: false, message: 'Price is required'});
 
         }
